@@ -1,9 +1,7 @@
 package com.SenzaNome0;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class Grafo {
     private final Map<Integer, Nodo> idToNodo;
@@ -12,6 +10,11 @@ public class Grafo {
     public Grafo() {
         idToNodo = new HashMap<>();
         grafo = new HashMap<>();
+    }
+
+    public Grafo(Grafo grafo) {
+        this.idToNodo = new HashMap<>(grafo.idToNodo);
+        this.grafo = new HashMap<>(grafo.grafo);
     }
 
     public void addNodo(Nodo nodo) {
@@ -66,6 +69,6 @@ public class Grafo {
         }
         return padri;
     }
-  
+
      */
 }
