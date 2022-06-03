@@ -1,11 +1,12 @@
 package com.SenzaNome0;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Grafo {
     private final Map<Integer, Nodo> idToNodo;
-    private final Map<Integer, Map<Integer, Integer>> grafo;
+    private final Map<Integer, Map<Integer, Double>> grafo;
 
     public Grafo() {
         idToNodo = new HashMap<>();
@@ -13,8 +14,14 @@ public class Grafo {
     }
 
     public Grafo(Grafo grafo) {
-        this.idToNodo = new HashMap<>(grafo.idToNodo);
-        this.grafo = new HashMap<>(grafo.grafo);
+        this.idToNodo = new HashMap<>();
+        this.idToNodo.putAll(grafo.idToNodo);
+
+        this.grafo = new HashMap<>();
+        for (Map.Entry<Integer, Map<Integer, Double>> entry1 : grafo.grafo.entrySet()) {
+            Map<Integer, Double> temp = new HashMap<>(entry1.getValue());
+            this.grafo.put(entry1.getKey(), temp);
+        }
     }
 
     public void addNodo(Nodo nodo) {
@@ -23,11 +30,40 @@ public class Grafo {
     }
 
     public void addEdge(int idPart, int idDest) {
-        grafo.get(idPart).put(idDest, Integer.MAX_VALUE);
+        grafo.get(idPart).put(idDest, Double.MAX_VALUE);
     }
 
-    public void setDist(int idPart, int idDest, int dist) {
+    public void setDist(int idPart, int idDest, double dist) {
         grafo.get(idPart).put(idDest, dist);
+    }
+    
+    public void initDistances(boolean isTonatiuh) {
+        for (Map.Entry<Integer, Map<Integer, Double>> grafoEntry : grafo.entrySet()) {
+            int idPartenza = grafoEntry.getKey();
+            Nodo partenza = idToNodo.get(idPartenza);
+
+            System.out.println("Id nodo di partenza: " + idPartenza);
+
+            for (Map.Entry<Integer, Double> linkEntry : grafoEntry.getValue().entrySet()) {
+                int idDestinazione = linkEntry.getKey();
+                Nodo destinazione = idToNodo.get(idDestinazione);
+
+                System.out.println("Id nodo di destinazione: " + idDestinazione);
+
+                double distanza = Double.MAX_VALUE;
+                if (isTonatiuh) {
+                    distanza = Math.sqrt(Math.pow((destinazione.getX() - partenza.getX()), 2) + Math.pow((destinazione.getY() - partenza.getY()), 2));
+                } else {
+                    distanza = Math.abs(destinazione.getH() - partenza.getH());
+                }
+
+                System.out.println("Distanza: " + distanza);
+
+                setDist(idPartenza, idDestinazione, distanza);
+            }
+
+            System.out.println();
+        }
     }
 
     @Override
@@ -37,7 +73,7 @@ public class Grafo {
                 ", grafo=" + grafo +
                 '}';
     }
-
+    
     /*
     public Map AlberoCamminiMinimi(){
         Map<Integer, Integer> distanze = new HashMap<>();

@@ -4,6 +4,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,8 +14,10 @@ public class Main {
             try {
                 Grafo grafoTonatiuh = parserXML.getGrafo("Copy of PgAr_Map_" + i + ".xml");
                 Grafo grafoMetztli = new Grafo(grafoTonatiuh);
-                initDistances(grafoTonatiuh, true);
-                initDistances(grafoMetztli, false);
+
+                grafoTonatiuh.initDistances(true);
+                grafoMetztli.initDistances(false);
+
                 System.out.println(grafoTonatiuh);
                 System.out.println(grafoMetztli);
 
@@ -23,9 +26,5 @@ public class Main {
                 e.printStackTrace();
             }
         }
-    }
-
-    private static void initDistances(Grafo grafo, boolean isTonatiuh) {
-
     }
 }
