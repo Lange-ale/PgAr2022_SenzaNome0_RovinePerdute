@@ -1,44 +1,59 @@
 package com.SenzaNome0;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 
 public class ParserXML {
-    XMLInputFactory xmlif = null;
+    private static final String FILENAME = "./Copy of PgAr_Map_5.xml";
 
-    public ParserXML() {
-        xmlif = XMLInputFactory.newInstance();
+    public Grafo getGrafo() {
+        try {
+            // Creiamo il grafo
+            Grafo grafo = new Grafo();
+
+            // Apri il documento XML in base al FILENAME
+            Document documento = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(FILENAME));
+
+            // Prendi l'elemento radice, ovvero la mappa
+            Element mappa = documento.getDocumentElement();
+
+            // Prendi la lista dei nodi facenti parte della mappa (ovvero le città)
+            NodeList listaCitta = mappa.getElementsByTagName("city");
+
+            for (int i = 0; i < listaCitta.getLength(); i++) {
+                Node node = listaCitta.item(i);
+
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
+
+                    int id = Integer.parseInt(element.getAttribute("id"));
+                    String nome = element.getAttribute("name");
+                    int x = Integer.parseInt(element.getAttribute("x"));
+                    int y = Integer.parseInt(element.getAttribute("y"));
+                    int z = Integer.parseInt(element.getAttribute("z"));
+
+                    Nodo citta = new Nodo(id, nome, x, y, z);
+
+                    grafo.addNodo(citta);
+                }
+
+            }
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
-    public LinkedList<ArrayList<Integer>> getGrafo(String filename) throws XMLStreamException {
-        LinkedList<ArrayList<Integer>> collegamenti = new LinkedList<>();
-        XMLStreamReader xmlr = null;
-        try {
-            xmlr = xmlif.createXMLStreamReader(filename, new FileInputStream(filename));
-        } catch (Exception e) {
-            System.out.println("Errore nell'inizializzazione del reader:");
-            System.out.println(e.getMessage());
-        }
-        //mappa di lista di edge
-        while (xmlr.hasNext()) { // continua a leggere finché ha eventi a disposizione
-            switch (xmlr.getEventType()) { // switch sul tipo di evento
-                case XMLStreamConstants.START_ELEMENT: // inizio di un elemento: stampa il nome del tag e i suoi attributi
-                    collegamenti.add(new Nodo(Integer.parseInt(xmlr.getAttributeValue(0)),xmlr.getAttributeLocalName(1), Integer.parseInt(xmlr.getAttributeValue(2)), Integer.parseInt(xmlr.getAttributeValue(3)), Integer.parseInt(xmlr.getAttributeValue(4) )));
-                case XMLStreamConstants.CHARACTERS: // content all’interno di un elemento: stampa il testo
-                    if (xmlr.getText().trim().length() > 0) // controlla se il testo non contiene solo spazi
-                        System.out.println("-> " + xmlr.getText());
-                    break;
-            }
-            xmlr.next();
-        }
-        return collegamenti;
+    public static void main(String[] args) {
+        new ParserXML().getGrafo();
     }
 }
