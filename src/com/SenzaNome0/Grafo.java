@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class Grafo {
     private final Map<Integer, Nodo> idToNodo;
-    private final Map<Integer, Set<Edge>> grafo;
+    private final Map<Integer, Map<Integer, Integer>> grafo;
 
     public Grafo() {
         idToNodo = new HashMap<>();
@@ -16,16 +16,15 @@ public class Grafo {
 
     public void addNodo(Nodo nodo) {
         idToNodo.put(nodo.getId(), nodo);
-        grafo.put(nodo.getId(), new HashSet<>());
+        grafo.put(nodo.getId(), new HashMap<>());
     }
 
     public void addEdge(int idPart, int idDest) {
-        grafo.get(idPart).add(new Edge(idDest));
+        grafo.get(idPart).put(idDest, Integer.MAX_VALUE);
     }
 
     public void setDist(int idPart, int idDest, int dist) {
-        grafo.get(idPart).remove(new Edge(idDest));
-        grafo.get(idPart).add(new Edge(dist, idDest));
+        grafo.get(idPart).put(idDest, dist);
     }
 
     @Override
