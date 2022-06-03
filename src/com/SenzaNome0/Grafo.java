@@ -42,13 +42,9 @@ public class Grafo {
             int idPartenza = grafoEntry.getKey();
             Nodo partenza = idToNodo.get(idPartenza);
 
-            System.out.println("Id nodo di partenza: " + idPartenza);
-
             for (Map.Entry<Integer, Double> linkEntry : grafoEntry.getValue().entrySet()) {
                 int idDestinazione = linkEntry.getKey();
                 Nodo destinazione = idToNodo.get(idDestinazione);
-
-                System.out.println("Id nodo di destinazione: " + idDestinazione);
 
                 double distanza = Double.MAX_VALUE;
                 if (isTonatiuh) {
@@ -57,12 +53,8 @@ public class Grafo {
                     distanza = Math.abs(destinazione.getH() - partenza.getH());
                 }
 
-                System.out.println("Distanza: " + distanza);
-
                 setDist(idPartenza, idDestinazione, distanza);
             }
-
-            System.out.println();
         }
     }
 
