@@ -30,6 +30,10 @@ public class Grafo {
         grafo.put(nodo.getId(), new HashMap<>());
     }
 
+    public Nodo getNodo(int id) {
+        return idToNodo.get(id);
+    }
+
     public void addEdge(int idPart, int idDest) {
         grafo.get(idPart).put(idDest, Double.MAX_VALUE);
     }
@@ -70,7 +74,7 @@ public class Grafo {
                 '}';
     }
     
-    public ArrayList<Double> AlberoCamminiMinimi() {
+    public CamminoMinimo getCamminoMinimo() {
         ArrayList<Double> distanze = new ArrayList<>();
         ArrayList<Boolean> considerati = new ArrayList<>();
         ArrayList<Integer> nPadri = new ArrayList<>();
@@ -112,9 +116,7 @@ public class Grafo {
             considerati.set(attuale.getId(), true);
         }
 
-        System.out.println(precedenti);
-
-        return distanze;
+        return new CamminoMinimo(distanze, precedenti);
     }
 
     private void setMinimoInNodo(ArrayList<Double> distanze, ArrayList<Integer> nPadri, ArrayList<Integer> maxIdPassato,
