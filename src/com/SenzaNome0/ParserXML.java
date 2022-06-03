@@ -12,42 +12,57 @@ import java.io.File;
 import java.io.IOException;
 
 public class ParserXML {
-    public Grafo getGrafo(String filename) {
-        try {
-            // Creiamo il grafo
-            Grafo grafo = new Grafo();
 
-            // Apri il documento XML in base al FILENAME
-            Document documento = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(filename));
+    private Nodo getCitta(Element element) {
+        int id = Integer.parseInt(element.getAttribute("id"));
+        String nome = element.getAttribute("name");
+        int x = Integer.parseInt(element.getAttribute("x"));
+        int y = Integer.parseInt(element.getAttribute("y"));
+        int h = Integer.parseInt(element.getAttribute("h"));
 
-            // Prendi l'elemento radice, ovvero la mappa
-            Element mappa = documento.getDocumentElement();
+        return new Nodo(id, nome, x, y, h);
+    }
 
-            // Prendi la lista dei nodi facenti parte della mappa (ovvero le città)
-            NodeList listaCitta = mappa.getElementsByTagName("city");
+    public Grafo getGrafo(String filename) throws ParserConfigurationException, IOException, SAXException {
+        // Creiamo il grafo
+        Grafo grafo = new Grafo();
 
-            for (int i = 0; i < listaCitta.getLength(); i++) {
-                Node node = listaCitta.item(i);
+        // Apri il documento XML in base al FILENAME
+        Document documento = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(filename));
 
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) node;
+        // Prendi l'elemento radice, ovvero la mappa
+        Element mappa = documento.getDocumentElement();
 
-                    int id = Integer.parseInt(element.getAttribute("id"));
-                    String nome = element.getAttribute("name");
-                    int x = Integer.parseInt(element.getAttribute("x"));
-                    int y = Integer.parseInt(element.getAttribute("y"));
-                    int h = Integer.parseInt(element.getAttribute("h"));
+        // Prendi la lista dei nodi facenti parte della mappa (ovvero le città)
+        NodeList listaCitta = mappa.getElementsByTagName("city");
 
-                    Nodo citta = new Nodo(id, nome, x, y, h);
+        for (int i = 0; i < listaCitta.getLength(); i++) {
+            Node cityNode = listaCitta.item(i);
 
-                    grafo.addNodo(citta);
+            if (cityNode.getNodeType() == Node.ELEMENT_NODE) {
+                // Aggiunta di un nodo al grafo, senza tenere conto dei riferimenti
+                Element cityElement = (Element) cityNode;
+
+                Nodo citta = getCitta(cityElement);
+                grafo.addNodo(citta);
+
+                // Aggiunta di ogni singolo riferimento per il nodo corrente
+                NodeList listaRiferimenti = cityElement.getElementsByTagName("link");
+
+                for (int j = 0; j < listaRiferimenti.getLength(); j++) {
+                    Node linkNode = listaRiferimenti.item(j);
+
+                    if (linkNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element linkElement = (Element) linkNode;
+                        int idDestinazione = Integer.parseInt(linkElement.getAttribute("to"));
+
+                        grafo.addEdge(citta.getId(), idDestinazione);
+                    }
                 }
             }
-            return grafo;
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
         }
 
-        return null;
+        return grafo;
     }
+
 }
