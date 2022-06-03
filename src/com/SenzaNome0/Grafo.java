@@ -9,11 +9,9 @@ public class Grafo {
     private final Map<Integer, Nodo> idToNodo;
     private final Map<Integer, Set<Edge>> grafo;
 
-    public Grafo(int nNodi) {
+    public Grafo() {
         idToNodo = new HashMap<>();
         grafo = new HashMap<>();
-        for (int i = 0; i < nNodi; i++)
-            grafo.put(i, new HashSet<>());
     }
 
     public void addNodo(Nodo nodo) {
