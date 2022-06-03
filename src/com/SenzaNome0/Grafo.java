@@ -3,6 +3,7 @@ package com.SenzaNome0;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 public class Grafo {
     private final Map<Integer, Nodo> idToNodo;
@@ -69,37 +70,60 @@ public class Grafo {
                 '}';
     }
     
-    /*
-    public Map AlberoCamminiMinimi(){
-        Map<Integer, Integer> distanze = new HashMap<>();
-        Map<Integer, Integer> padri = new HashMap<>();
-        for (int i = 0; i < idToNodo.size(); i++) {
-            distanze.put(i, Integer.MAX_VALUE);
-            padri.put(i, -1);
+    public ArrayList<Double> AlberoCamminiMinimi() {
+        ArrayList<Double> distanze = new ArrayList<>();
+        ArrayList<Boolean> considerati = new ArrayList<>();
+        ArrayList<Integer> nPadri = new ArrayList<>();
+        ArrayList<Integer> maxIdPassato = new ArrayList<>();
+        PriorityQueue<Distanza> pq = new PriorityQueue<>();
+        Map<Integer, Integer> precedenti = new HashMap<>();
+        for (int i = 0; i < grafo.size(); i++) {
+            distanze.add(Double.MAX_VALUE);
+            considerati.add(false);
+            nPadri.add(0);
+            maxIdPassato.add(i);
         }
-        distanze.put(0, 0);
-        for (int i = 0; i < idToNodo.size(); i++) {
-            int nodoMin = -1;
-            int distanzaMin = Integer.MAX_VALUE;
-            for (int j = 0; j < idToNodo.size(); j++) {
-                if (distanze.get(j) < distanzaMin && !distanze.containsKey(j)) {
-                    nodoMin = j;
-                    distanzaMin = distanze.get(j);
+        precedenti.put(0, 0);
+        distanze.set(0, 0.0);
+        pq.add(new Distanza(0,0));
+
+        while (!pq.isEmpty()){
+            if (considerati.get(pq.peek().getId())){
+                pq.poll();
+                continue;
+            }
+            Distanza attuale = pq.poll();
+            double distAttualeNodo;
+            for (Integer idNodo: grafo.get(attuale.getId()).keySet()) {
+                distAttualeNodo = grafo.get(attuale.getId()).get(idNodo);
+                if (!considerati.get(idNodo)) {
+                    if (attuale.getDistanza() + distAttualeNodo < distanze.get(idNodo))
+                        setMinimoInNodo(distanze, nPadri, maxIdPassato, pq, precedenti, attuale, distAttualeNodo, idNodo);
+                    else if (attuale.getDistanza() + distAttualeNodo == distanze.get(idNodo)) {
+                        if (nPadri.get(idNodo) < nPadri.get(attuale.getId()))
+                            setMinimoInNodo(distanze, nPadri, maxIdPassato, pq, precedenti, attuale, distAttualeNodo, idNodo);
+                        else if (nPadri.get(idNodo) == nPadri.get(attuale.getId()))
+                            if (maxIdPassato.get(idNodo) > maxIdPassato.get(attuale.getId()))
+                                setMinimoInNodo(distanze, nPadri, maxIdPassato, pq, precedenti, attuale, distAttualeNodo, idNodo);
+                    }
                 }
             }
-            if (nodoMin == -1)
-                break;
-            for (Edge edge : grafo.get(nodoMin)) {
-                int idDest = edge.getIdDest();
-                int distanza = edge.getDistanza();
-                if (distanze.get(nodoMin) + distanza < distanze.get(idDest)) {
-                    distanze.put(idDest, distanze.get(nodoMin) + distanza);
-                    padri.put(idDest, nodoMin);
-                }
-            }
+
+            considerati.set(attuale.getId(), true);
         }
-        return padri;
+
+        System.out.println(precedenti);
+
+        return distanze;
     }
 
-     */
+    private void setMinimoInNodo(ArrayList<Double> distanze, ArrayList<Integer> nPadri, ArrayList<Integer> maxIdPassato,
+                                 PriorityQueue<Distanza> pq, Map<Integer, Integer> precedenti,
+                                 Distanza attuale, double distAttualeNodo, Integer idNodo) {
+        distanze.set(idNodo, attuale.getDistanza() + distAttualeNodo);
+        pq.add(new Distanza(idNodo, distanze.get(idNodo)));
+        nPadri.set(idNodo, nPadri.get(attuale.getId()) + 1);
+        maxIdPassato.set(idNodo, Math.max(maxIdPassato.get(attuale.getId()), maxIdPassato.get(idNodo)));
+        precedenti.put(idNodo, attuale.getId());
+    }
 }

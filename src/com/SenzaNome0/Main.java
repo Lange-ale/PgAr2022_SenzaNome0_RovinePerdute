@@ -18,10 +18,13 @@ public class Main {
                 grafoTonatiuh.initDistances(true);
                 grafoMetztli.initDistances(false);
 
-                System.out.println(grafoTonatiuh);
-                System.out.println(grafoMetztli);
+                System.out.println(grafoMetztli.AlberoCamminiMinimi());
+                System.out.println();
+                System.out.println();
+                System.out.println();
+               // System.out.println(grafoTonatiuh);
+                //System.out.println(grafoMetztli);
 
-                break; // TODO: DEL ME
             } catch (ParserConfigurationException | IOException | SAXException e) {
                 e.printStackTrace();
             }
