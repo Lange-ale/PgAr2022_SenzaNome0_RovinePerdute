@@ -52,4 +52,28 @@ public class Nodo {
     public void setZ(int z) {
         this.z = z;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Nodo nodo)) return false;
+
+        return id == nodo.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Nodo{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
 }
