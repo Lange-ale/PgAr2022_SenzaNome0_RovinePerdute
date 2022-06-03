@@ -3,14 +3,14 @@ package com.SenzaNome0;
 public class Nodo {
     private int id;
     private String nome;
-    private int x, y, z;
+    private int x, y, h;
 
-    public Nodo(int id, String nome, int x, int y, int z) {
+    public Nodo(int id, String nome, int x, int y, int h) {
         this.id = id;
         this.nome = nome;
         this.x = x;
         this.y = y;
-        this.z = z;
+        this.h = h;
     }
 
     public int getId() {
@@ -45,12 +45,12 @@ public class Nodo {
         this.y = y;
     }
 
-    public int getZ() {
-        return z;
+    public int getH() {
+        return h;
     }
 
-    public void setZ(int z) {
-        this.z = z;
+    public void setH(int h) {
+        this.h = h;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class Nodo {
                 ", nome='" + nome + '\'' +
                 ", x=" + x +
                 ", y=" + y +
-                ", z=" + z +
+                ", h=" + h +
                 '}';
     }
 }

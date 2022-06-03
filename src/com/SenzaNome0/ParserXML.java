@@ -12,15 +12,13 @@ import java.io.File;
 import java.io.IOException;
 
 public class ParserXML {
-    private static final String FILENAME = "./Copy of PgAr_Map_5.xml";
-
-    public Grafo getGrafo() {
+    public Grafo getGrafo(String filename) {
         try {
             // Creiamo il grafo
             Grafo grafo = new Grafo();
 
             // Apri il documento XML in base al FILENAME
-            Document documento = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(FILENAME));
+            Document documento = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(filename));
 
             // Prendi l'elemento radice, ovvero la mappa
             Element mappa = documento.getDocumentElement();
@@ -38,22 +36,18 @@ public class ParserXML {
                     String nome = element.getAttribute("name");
                     int x = Integer.parseInt(element.getAttribute("x"));
                     int y = Integer.parseInt(element.getAttribute("y"));
-                    int z = Integer.parseInt(element.getAttribute("z"));
+                    int h = Integer.parseInt(element.getAttribute("h"));
 
-                    Nodo citta = new Nodo(id, nome, x, y, z);
+                    Nodo citta = new Nodo(id, nome, x, y, h);
 
                     grafo.addNodo(citta);
                 }
-
             }
+            return grafo;
         } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
         }
 
         return null;
-    }
-
-    public static void main(String[] args) {
-        new ParserXML().getGrafo();
     }
 }
