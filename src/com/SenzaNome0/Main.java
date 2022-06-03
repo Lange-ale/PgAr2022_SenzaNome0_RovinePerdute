@@ -13,8 +13,8 @@ public class Main {
             try {
                 Grafo grafoTonatiuh = parserXML.getGrafo("Copy of PgAr_Map_" + i + ".xml");
                 Grafo grafoMetztli = new Grafo(grafoTonatiuh);
-                initDistances(grafoTonatiuh, false);
                 initDistances(grafoTonatiuh, true);
+                initDistances(grafoMetztli, false);
                 System.out.println(grafoTonatiuh);
                 System.out.println(grafoMetztli);
 
@@ -25,7 +25,7 @@ public class Main {
         }
     }
 
-    private static void initDistances(Grafo grafo, boolean is) {
+    private static void initDistances(Grafo grafo, boolean isTonatiuh) {
 
     }
 }
