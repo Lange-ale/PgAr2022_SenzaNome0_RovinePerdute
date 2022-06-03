@@ -9,6 +9,10 @@ public class Edge {
         this.idDest = idDest;
     }
 
+    public Edge(int idDest) {
+        this.idDest = idDest;
+    }
+
     public int getDistanza() {
         return distanza;
     }

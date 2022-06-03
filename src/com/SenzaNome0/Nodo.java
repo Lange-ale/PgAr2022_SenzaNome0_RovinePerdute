@@ -56,8 +56,8 @@ public class Nodo {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Nodo nodo)) return false;
-
+        if (!(o instanceof Nodo)) return false;
+        Nodo nodo = (Nodo) o;
         return id == nodo.id;
     }
 
