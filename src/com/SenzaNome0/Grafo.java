@@ -46,14 +46,17 @@ public class Grafo {
                 int idDestinazione = linkEntry.getKey();
                 Nodo destinazione = idToNodo.get(idDestinazione);
 
-                double distanza = Double.MAX_VALUE;
-                if (isTonatiuh) {
-                    distanza = Math.sqrt(Math.pow((destinazione.getX() - partenza.getX()), 2) + Math.pow((destinazione.getY() - partenza.getY()), 2));
-                } else {
-                    distanza = Math.abs(destinazione.getH() - partenza.getH());
-                }
+                if (grafo.get(idPartenza).get(idDestinazione) == Double.MAX_VALUE) {
+                    double distanza = Double.MAX_VALUE;
 
-                setDist(idPartenza, idDestinazione, distanza);
+                    if (isTonatiuh) {
+                        distanza = Math.sqrt(Math.pow((destinazione.getX() - partenza.getX()), 2) + Math.pow((destinazione.getY() - partenza.getY()), 2));
+                    } else {
+                        distanza = Math.abs(destinazione.getH() - partenza.getH());
+                    }
+
+                    setDist(idPartenza, idDestinazione, distanza);
+                }
             }
         }
     }
