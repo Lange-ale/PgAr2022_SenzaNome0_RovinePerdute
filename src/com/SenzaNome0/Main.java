@@ -17,21 +17,23 @@ public class Main {
     public static void main(String[] args) {
         ParserXML parserXML = new ParserXML();
 
-        try {
-            // IMPORTANTE: Per testare con un altro input, cambiare la variabile qui sotto
-            String nomeFile = "Copy of PgAr_Map_10000.xml";
-            Grafo grafoTonatiuh = parserXML.getGrafo(nomeFile);
-            Grafo grafoMetztli = new Grafo(grafoTonatiuh);
+        int[] filenames = {5, 12, 50, 200, 2000, 10000};
+        for (int i : filenames) {
+            try {
+                Grafo grafoTonatiuh = parserXML.getGrafo("Copy of PgAr_Map_" + i + ".xml");
 
-            grafoTonatiuh.initDistances(true);
-            grafoMetztli.initDistances(false);
+                Grafo grafoMetztli = new Grafo(grafoTonatiuh);
 
-            CamminoMinimo camminoMinimoTonatiuh = grafoTonatiuh.getCamminoMinimo();
-            CamminoMinimo camminoMinimoMetztli = grafoMetztli.getCamminoMinimo();
+                grafoTonatiuh.initDistances(true);
+                grafoMetztli.initDistances(false);
 
-            scriviDocumentoFinale("./Routes.xml", camminoMinimoTonatiuh, camminoMinimoMetztli, grafoTonatiuh);
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
+                CamminoMinimo camminoMinimoTonatiuh = grafoTonatiuh.getCamminoMinimo();
+                CamminoMinimo camminoMinimoMetztli = grafoMetztli.getCamminoMinimo();
+
+                scriviDocumentoFinale("./Routes" + i +  ".xml", camminoMinimoTonatiuh, camminoMinimoMetztli, grafoTonatiuh);
+            } catch (ParserConfigurationException | IOException | SAXException e) {
+                e.printStackTrace();
+            }
         }
     }
 
